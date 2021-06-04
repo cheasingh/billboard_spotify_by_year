@@ -17,12 +17,20 @@ def play_by_year(date):
         f"https://www.billboard.com/charts/hot-100/{date}").text
     soup = BeautifulSoup(response, "html.parser")
 
-    song_list = [song.getText() for song in soup.select(
+    song_title_list = [song_title.getText() for song_title in soup.select(
         "span.chart-element__information__song.text--truncate.color--primary")]
+
+    artist_list = [artist.getText() for artist in soup.select(
+        "span.chart-element__information__artist.text--truncate.color--secondary")]
+
+    song_list = [i + " " + j for i, j in zip(song_title_list, artist_list)]
     # print(song_list)
 
     year = date.split("-")[0]
-    sp.create_playlist(f"Billboard top 100 - {year}")
+    month = date.split("-")[1]
+    day = date.split("-")[2]
+    month_dict = {"01": "January", "02": "February", "03": "March", "04": "April", "05": "May", "06": "June", "07": "July", "08": "August", "09": "September", "10": "October", "11": "November", "12": "December"}
+    sp.create_playlist(f"Billboard top 100 - {month_dict[month]} {day}, {year}")
     # print(sp.playlist_id)
 
     # print()
